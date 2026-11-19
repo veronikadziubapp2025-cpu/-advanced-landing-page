@@ -16,11 +16,23 @@
     />
     <meta
       property="og:description"
-      content="Забронюй перфоратор Bosch GBH 2-29 у сусіда з безпекою Escrow."
+      content="Забронюй перфоратор Bosch GBH 2-26 у сусіда з безпекою Escrow."
     />
     <title>NeighborCraft — оренда перфоратора Bosch поруч</title>
     <link rel="icon" type="image/jpeg" href="assets/images/logo.jpg" />
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!--  CDN(Стилі Swiper та Fancybox) -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css"
+    />
   </head>
   <body
     id="top"
@@ -146,12 +158,15 @@
           >
             Інструмент поруч — оренда за хвилину
           </p>
+          <!-- Друкукуючий текст який я замінила-->
           <h1
             id="hero-title"
             class="max-w-2xl text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl lg:text-5xl"
           >
-            Перфоратор Bosch GBH 2-26 — орендуй у сусіда
+            Перфоратор Bosch GBH 2-26 —<br />
+            <span id="typed-text" class="text-[#176B3A]"></span>
           </h1>
+
           <p class="mt-4 max-w-xl text-base leading-relaxed text-[#595959]">
             Не купуй інструмент заради одного ремонту. Забронюй на потрібні дати
             та забери його поруч з домом.
@@ -212,10 +227,12 @@
           </p>
 
           <form
+            id="booking-form"
             action="mailto:support@neighborcraft.ua?subject=Бронювання перфоратора Bosch GBH 2-26"
             method="post"
             enctype="text/plain"
             class="mt-6 space-y-4"
+            novalidate
           >
             <div>
               <label for="booking-name" class="mb-1 block text-sm font-bold"
@@ -228,9 +245,16 @@
                 autocomplete="name"
                 minlength="2"
                 placeholder="Наприклад, Вероніка"
-                class="min-h-[44px] w-full rounded-xl border border-[#E5E7EB] bg-white px-3 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2"
+                aria-describedby="bookingNameError"
+                aria-invalid="false"
+                class="min-h-[44px] w-full rounded-xl border border-[#E5E7EB] bg-white px-3 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2 aria-[invalid=true]:border-[#B91C1C] data-[valid=true]:border-[#1D382B]"
                 required
               />
+              <p
+                id="bookingNameError"
+                class="mt-1 hidden text-sm font-medium text-[#B91C1C]"
+                aria-live="polite"
+              ></p>
             </div>
 
             <div>
@@ -242,12 +266,20 @@
                 id="booking-phone"
                 name="Телефон"
                 autocomplete="tel"
-                pattern="[0-9+\s()\-]{10,}"
-                title="Введи номер телефону, наприклад +380 67 123 45 67"
-                placeholder="+380 __ ___ __ __"
-                class="min-h-[44px] w-full rounded-xl border border-[#E5E7EB] bg-white px-3 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2"
+                inputmode="tel"
+                maxlength="17"
+                value="+380 "
+                placeholder="+380 XX XXX XX XX"
+                aria-describedby="bookingPhoneError"
+                aria-invalid="false"
+                class="min-h-[44px] w-full rounded-xl border border-[#E5E7EB] bg-white px-3 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2 aria-[invalid=true]:border-[#B91C1C] data-[valid=true]:border-[#1D382B]"
                 required
               />
+              <p
+                id="bookingPhoneError"
+                class="mt-1 hidden text-sm font-medium text-[#B91C1C]"
+                aria-live="polite"
+              ></p>
             </div>
 
             <div class="grid grid-cols-2 gap-3">
@@ -259,9 +291,16 @@
                   type="date"
                   id="date-from"
                   name="Дата отримання"
-                  class="min-h-[44px] w-full rounded-xl border border-[#E5E7EB] bg-white px-3 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2"
+                  aria-describedby="dateFromError"
+                  aria-invalid="false"
+                  class="min-h-[44px] w-full rounded-xl border border-[#E5E7EB] bg-white px-3 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2 aria-[invalid=true]:border-[#B91C1C] data-[valid=true]:border-[#1D382B]"
                   required
                 />
+                <p
+                  id="dateFromError"
+                  class="mt-1 hidden text-sm font-medium text-[#B91C1C]"
+                  aria-live="polite"
+                ></p>
               </div>
               <div class="min-w-0">
                 <label for="date-to" class="mb-1 block text-sm font-bold"
@@ -271,9 +310,16 @@
                   type="date"
                   id="date-to"
                   name="Дата повернення"
-                  class="min-h-[44px] w-full rounded-xl border border-[#E5E7EB] bg-white px-3 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2"
+                  aria-describedby="dateToError"
+                  aria-invalid="false"
+                  class="min-h-[44px] w-full rounded-xl border border-[#E5E7EB] bg-white px-3 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2 aria-[invalid=true]:border-[#B91C1C] data-[valid=true]:border-[#1D382B]"
                   required
                 />
+                <p
+                  id="dateToError"
+                  class="mt-1 hidden text-sm font-medium text-[#B91C1C]"
+                  aria-live="polite"
+                ></p>
               </div>
             </div>
 
@@ -288,9 +334,17 @@
                 id="comment"
                 name="Коментар"
                 rows="3"
+                maxlength="300"
                 placeholder="Наприклад, зручний час для зустрічі"
-                class="w-full rounded-xl border border-[#E5E7EB] bg-white px-3 py-2 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2"
+                aria-describedby="commentError"
+                aria-invalid="false"
+                class="w-full rounded-xl border border-[#E5E7EB] bg-white px-3 py-2 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2 aria-[invalid=true]:border-[#B91C1C] data-[valid=true]:border-[#1D382B]"
               ></textarea>
+              <p
+                id="commentError"
+                class="mt-1 hidden text-sm font-medium text-[#B91C1C]"
+                aria-live="polite"
+              ></p>
             </div>
 
             <div class="space-y-1 rounded-xl bg-[#F4F3EE] p-4 text-sm">
@@ -302,13 +356,26 @@
                 <span class="text-[#595959]">Застава (повертається)</span>
                 <span class="font-bold">1000 ₴</span>
               </div>
+              <div
+                class="mt-2 flex justify-between border-t border-[#E5E7EB] pt-2"
+              >
+                <span class="font-bold">Разом до оплати</span>
+                <span id="booking-total" class="font-bold">0 ₴</span>
+              </div>
             </div>
 
             <button
+              id="booking-submit"
               type="submit"
-              class="inline-flex min-h-[48px] w-full items-center justify-center rounded-xl bg-[#00E676] px-5 text-base font-bold text-[#121212] shadow-sm transition-all duration-200 ease-in-out hover:bg-[#33EB91] hover:shadow-md active:bg-[#00C853] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2"
+              aria-busy="false"
+              class="inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-xl bg-[#00E676] px-5 text-base font-bold text-[#121212] shadow-sm transition-all duration-200 ease-in-out hover:bg-[#33EB91] hover:shadow-md active:bg-[#00C853] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-70"
             >
-              Забронювати
+              <span
+                id="booking-spinner"
+                class="hidden h-5 w-5 animate-spin rounded-full border-2 border-[#121212]/30 border-t-[#121212]"
+                aria-hidden="true"
+              ></span>
+              <span id="booking-submit-text">Забронювати</span>
             </button>
             <p class="text-center text-xs text-[#595959]">
               🔒 Оплата та застава холдуються до успішного повернення
@@ -384,6 +451,76 @@
         </div>
       </section>
 
+      <!-- ГАЛЕРЕЯ Fancybox v5 (4 інструменти для продажу) -->
+      <section
+        id="gallery"
+        class="py-12 sm:py-16 bg-white border-y border-[#E5E7EB]"
+      >
+        <div class="max-w-7xl mx-auto px-4">
+          <p class="text-xs font-bold uppercase tracking-wider text-[#00C853]">
+            Детальний огляд
+          </p>
+          <h2
+            class="text-2xl sm:text-3xl font-extrabold text-[#121212] mt-1 mb-8"
+          >
+            Технічний стан та комплектація перфоратора
+          </h2>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Фото 1 — У кейсі (L-Case) -->
+            <a
+              href="https://gipsokarton.in.ua/media/products/perforator-bosch-gbh-2-26-dre-professional-v-keisi_e986b4f1.png"
+              data-fancybox="neighbor-gallery"
+              data-caption="Перфоратор Bosch GBH 2-26 Professional у фірмовому пластиковому кейсі L-Case"
+            >
+              <img
+                src="https://gipsokarton.in.ua/media/products/perforator-bosch-gbh-2-26-dre-professional-v-keisi_e986b4f1.png"
+                alt="Bosch GBH 2-26 Professional в кейсі"
+                class="rounded-2xl border border-[#E5E7EB] bg-[#F4F3EE]/30 p-4 shadow-sm hover:scale-[1.03] transition duration-300 w-full h-64 object-contain cursor-zoom-in"
+              />
+            </a>
+
+            <!-- Фото 2 — Перфоратор зблизька -->
+            <a
+              href="https://www.bosch-professional.com/pk/en/ocsmedia/5955-54/application-image/full/rotary-hammer-with-sds-plus-pro-gbh-2-26-dre-0611253703.png"
+              data-fancybox="neighbor-gallery"
+              data-caption="Bosch GBH 2-26 Professional — ергономічна рукоятка, патрон SDS-plus та обмежувач глибини"
+            >
+              <img
+                src="https://www.bosch-professional.com/pk/en/ocsmedia/5955-54/application-image/full/rotary-hammer-with-sds-plus-pro-gbh-2-26-dre-0611253703.png"
+                alt="Перфоратор Bosch GBH 2-26"
+                class="rounded-2xl border border-[#E5E7EB] bg-[#F4F3EE]/30 p-4 shadow-sm hover:scale-[1.03] transition duration-300 w-full h-64 object-contain cursor-zoom-in"
+              />
+            </a>
+
+            <!-- Фото 3 — Свердління (Буріння стіни) -->
+            <a
+              href="https://images.unsplash.com/photo-1504148455328-c376907d081c?w=1200"
+              data-fancybox="neighbor-gallery"
+              data-caption="Свердління з ударом (буріння) бетону та цегли буром SDS-plus"
+            >
+              <img
+                src="https://images.unsplash.com/photo-1504148455328-c376907d081c?w=600"
+                alt="Буріння стіни перфоратором"
+                class="rounded-2xl border border-[#E5E7EB] shadow-sm hover:scale-[1.03] transition duration-300 w-full h-64 object-cover cursor-zoom-in"
+              />
+            </a>
+
+            <!-- Фото 4 — Демонтаж (Робота з долотом) -->
+            <a
+              href="https://hireload.co.uk/wp-content/uploads/2025/07/sds-plus-hammer-drill-hire-london-rotary-hammer-for-concrete-and-masonry-block-wall-800x800.webp"
+              data-fancybox="neighbor-gallery"
+              data-caption="Ударний режим без обертання (довбання) для демонтажу штукатурки чи плитки"
+            >
+              <img
+                src="https://hireload.co.uk/wp-content/uploads/2025/07/sds-plus-hammer-drill-hire-london-rotary-hammer-for-concrete-and-masonry-block-wall-800x800.webp"
+                alt="Демонтажні роботи перфоратором"
+                class="rounded-2xl border border-[#E5E7EB] shadow-sm hover:scale-[1.03] transition duration-300 w-full h-64 object-cover cursor-zoom-in"
+              />
+            </a>
+          </div>
+        </div>
+      </section>
       <!-- Відео: YouTube вбудовано напряму, без JavaScript. -->
       <section
         id="media-showcase"
@@ -510,29 +647,143 @@
             >
           </div>
         </div>
-        <article
-          class="mt-8 max-w-3xl rounded-2xl border border-[#E5E7EB] bg-white p-6 shadow-sm"
-        >
-          <p class="text-[#8A5A00]" role="img" aria-label="5 зірок">★★★★★</p>
-          <blockquote class="mt-4 leading-relaxed">
-            «Перфоратор був поруч, тому я швидко зробила ремонт без витрат на
-            купівлю власного інструмента.»
-          </blockquote>
-          <div class="mt-6 flex items-center gap-3">
+        <!-- Замість старого <article> встав цей блок слайдера: -->
+        <div class="swiper reviews-swiper mt-8 pb-12">
+          <div class="swiper-wrapper">
+            <!-- Слайд 1 -->
             <div
-              class="flex h-10 w-10 items-center justify-center rounded-full bg-[#B7D9BC] font-bold"
-              aria-hidden="true"
+              class="swiper-slide flex h-auto flex-col justify-between rounded-2xl border border-[#E5E7EB] bg-white p-6 shadow-sm"
             >
-              ОС
+              <div>
+                <p class="text-[#8A5A00]">★★★★★</p>
+                <blockquote class="mt-4 leading-relaxed text-[#121212]">
+                  «Перфоратор NeighborCraft був поруч, тому я швидко зробила
+                  ремонт без витрат на купівлю власного інструмента.»
+                </blockquote>
+              </div>
+              <div class="mt-6 flex items-center gap-3">
+                <img
+                  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150"
+                  alt="Олена С."
+                  class="h-11 w-11 rounded-full border-2 border-[#00E676] object-cover"
+                />
+                <p class="text-sm font-bold">
+                  Олена С.
+                  <span class="block font-normal text-[#595959]"
+                    >✓ Перфоратор Bosch GBH 2-26</span
+                  >
+                </p>
+              </div>
             </div>
-            <p class="text-sm font-bold">
-              Олена С.
-              <span class="block font-normal text-[#595959]"
-                >✓ Перфоратор Bosch GBH 2-26</span
-              >
-            </p>
+
+            <!-- Слайд 2 -->
+            <div
+              class="swiper-slide flex h-auto flex-col justify-between rounded-2xl border border-[#E5E7EB] bg-white p-6 shadow-sm"
+            >
+              <div>
+                <p class="text-[#8A5A00]">★★★★★</p>
+                <blockquote class="mt-4 leading-relaxed text-[#121212]">
+                  «Здаю лазерний нівелір через NeighborCraft і отримую пасивний
+                  дохід, коли не користуюся ним сам.»
+                </blockquote>
+              </div>
+              <div class="mt-6 flex items-center gap-3">
+                <img
+                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150"
+                  alt="Андрій К."
+                  class="h-11 w-11 rounded-full border-2 border-[#00E676] object-cover"
+                />
+                <p class="text-sm font-bold">
+                  Андрій К.
+                  <span class="block font-normal text-[#595959]"
+                    >✓ Лазерний нівелір DeWalt</span
+                  >
+                </p>
+              </div>
+            </div>
+
+            <!-- Слайд 3 -->
+            <div
+              class="swiper-slide flex h-auto flex-col justify-between rounded-2xl border border-[#E5E7EB] bg-white p-6 shadow-sm"
+            >
+              <div>
+                <p class="text-[#8A5A00]">★★★★★</p>
+                <blockquote class="mt-4 leading-relaxed text-[#121212]">
+                  «Брав мийку високого тиску на вихідні. Застава через Escrow
+                  повернулася миттєво після здачі інструменту.»
+                </blockquote>
+              </div>
+              <div class="mt-6 flex items-center gap-3">
+                <img
+                  src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150"
+                  alt="Тарас М."
+                  class="h-11 w-11 rounded-full border-2 border-[#00E676] object-cover"
+                />
+                <p class="text-sm font-bold">
+                  Тарас М.
+                  <span class="block font-normal text-[#595959]"
+                    >✓ Мийка Kärcher K5</span
+                  >
+                </p>
+              </div>
+            </div>
+
+            <!-- Слайд 4 -->
+            <div
+              class="swiper-slide flex h-auto flex-col justify-between rounded-2xl border border-[#E5E7EB] bg-white p-6 shadow-sm"
+            >
+              <div>
+                <p class="text-[#8A5A00]">★★★★★</p>
+                <blockquote class="mt-4 leading-relaxed text-[#121212]">
+                  «Знайшла шліфмашинку в сусідньому під'їзді за 10 хвилин. Дуже
+                  зручно, що всі користувачі верифіковані через Дію.»
+                </blockquote>
+              </div>
+              <div class="mt-6 flex items-center gap-3">
+                <img
+                  src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150"
+                  alt="Ірина В."
+                  class="h-11 w-11 rounded-full border-2 border-[#00E676] object-cover"
+                />
+                <p class="text-sm font-bold">
+                  Ірина В.
+                  <span class="block font-normal text-[#595959]"
+                    >✓ Ексцентрикова шліфмашина</span
+                  >
+                </p>
+              </div>
+            </div>
+
+            <!-- Слайд 5 -->
+            <div
+              class="swiper-slide flex h-auto flex-col justify-between rounded-2xl border border-[#E5E7EB] bg-white p-6 shadow-sm"
+            >
+              <div>
+                <p class="text-[#8A5A00]">★★★★★</p>
+                <blockquote class="mt-4 leading-relaxed text-[#121212]">
+                  «Потрібно було обрізати гілки в саду. Орендував електропилку
+                  на день замість того, щоб витрачати тисячі на нову.»
+                </blockquote>
+              </div>
+              <div class="mt-6 flex items-center gap-3">
+                <img
+                  src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150"
+                  alt="Максим Д."
+                  class="h-11 w-11 rounded-full border-2 border-[#00E676] object-cover"
+                />
+                <p class="text-sm font-bold">
+                  Максим Д.
+                  <span class="block font-normal text-[#595959]"
+                    >✓ Ланцюгова пилка Bosch</span
+                  >
+                </p>
+              </div>
+            </div>
           </div>
-        </article>
+          <div class="swiper-pagination"></div>
+          <div class="swiper-button-prev !text-[#176B3A]"></div>
+          <div class="swiper-button-next !text-[#176B3A]"></div>
+        </div>
       </section>
 
       <!-- Контакти та мапа: Google Maps вбудовано напряму, без JavaScript. -->
@@ -1028,5 +1279,56 @@
       </div>
     </div>
     <script src="assets/js/validation.js" defer></script>
+    <script src="assets/js/booking-validation.js" defer></script>
+
+    <!--Скрипти з CDN, JS-бібліотек  -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const swiper = new Swiper(".reviews-swiper", {
+          loop: true,
+          spaceBetween: 24,
+          grabCursor: true,
+          autoplay: {
+            delay: 3000,
+            disableOnInteraction: false,
+            pauseOnMouseEnter: true,
+          },
+          pagination: {
+            el: ".swiper-pagination",
+            clickable: true,
+          },
+          navigation: {
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev",
+          },
+          breakpoints: {
+            320: { slidesPerView: 1 },
+            768: { slidesPerView: 2 },
+            1024: { slidesPerView: 3 },
+          },
+        });
+
+        Fancybox.bind("[data-fancybox='neighbor-gallery']", {
+          Carousel: { Transition: "fade" },
+          Images: { Panzoom: { maxScale: 3 } },
+        });
+
+        const typed = new Typed("#typed-text", {
+          strings: [
+            "перфоратор Bosch за 5 хв пішки.",
+            "лазерний нівелір з гарантією Escrow.",
+            "мийку Kärcher на вихідні.",
+          ],
+          typeSpeed: 95,
+          backSpeed: 55,
+          backDelay: 2200,
+          loop: true,
+        });
+      });
+    </script>
   </body>
 </html>
