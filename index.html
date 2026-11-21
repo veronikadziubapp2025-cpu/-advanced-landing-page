@@ -384,6 +384,156 @@
         </div>
       </section>
 
+      <section
+        id="rental-calculator"
+        class="bg-[#F4F3EE] py-12 sm:py-16"
+        aria-labelledby="calc-title"
+      >
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div
+            class="rounded-2xl border border-[#E5E7EB] bg-white p-5 shadow-sm md:p-8"
+          >
+            <h2
+              id="calc-title"
+              class="text-2xl font-extrabold text-[#121212] sm:text-3xl"
+            >
+              Калькулятор вартості оренди
+            </h2>
+            <p class="mt-2 text-[#121212]">
+              Перфоратор Bosch — 450 ₴ за добу. Оберіть термін і комплектацію —
+              вартість оновиться автоматично
+            </p>
+
+            <form
+              id="calc-form"
+              class="mt-6 grid grid-cols-1 gap-5 md:grid-cols-2"
+              novalidate
+            >
+              <div>
+                <label
+                  for="rent-days"
+                  class="mb-2 block font-semibold text-[#121212]"
+                >
+                  Кількість діб (1–30)
+                </label>
+                <input
+                  id="rent-days"
+                  name="rent-days"
+                  type="number"
+                  min="1"
+                  max="30"
+                  step="1"
+                  value="3"
+                  required
+                  inputmode="numeric"
+                  aria-describedby="error-days"
+                  class="min-h-[48px] w-full rounded-xl border border-[#949494] bg-white px-4 py-3 text-base hover:border-[#595959] focus-visible:border-[#121212] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2"
+                />
+                <p
+                  id="error-days"
+                  role="alert"
+                  class="mt-2 hidden text-sm text-[#B91C1C]"
+                ></p>
+              </div>
+
+              <div>
+                <label
+                  for="kit-type"
+                  class="mb-2 block font-semibold text-[#121212]"
+                >
+                  Комплектація
+                </label>
+                <select
+                  id="kit-type"
+                  name="kit-type"
+                  class="min-h-[48px] w-full rounded-xl border border-[#949494] bg-white px-4 py-3 text-base hover:border-[#595959] focus-visible:border-[#121212] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2"
+                >
+                  <option value="basic">Тільки перфоратор</option>
+                  <option value="drills">
+                    + набір свердел (+50 ₴/доба)
+                  </option>
+                  <option value="full">
+                    + набір свердел і пилозбірник (+90 ₴/доба)
+                  </option>
+                </select>
+              </div>
+
+              <div class="grid grid-cols-1 gap-3 md:col-span-2">
+                <label
+                  for="delivery-opt"
+                  class="flex min-h-[48px] cursor-pointer items-center gap-3 rounded-xl border border-[#E5E7EB] px-4 py-3"
+                >
+                  <input
+                    id="delivery-opt"
+                    name="delivery-opt"
+                    type="checkbox"
+                    class="size-5 shrink-0 accent-[#00E676] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2"
+                  />
+                  <span>Доставка до дверей (+80 ₴)</span>
+                </label>
+
+                <label
+                  for="insurance-opt"
+                  class="flex min-h-[48px] cursor-pointer items-center gap-3 rounded-xl border border-[#E5E7EB] px-4 py-3"
+                >
+                  <input
+                    id="insurance-opt"
+                    name="insurance-opt"
+                    type="checkbox"
+                    class="size-5 shrink-0 accent-[#00E676] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2"
+                  />
+                  <span>Страхування від пошкоджень (+30 ₴/доба)</span>
+                </label>
+              </div>
+
+              <div
+                aria-live="polite"
+                class="rounded-xl bg-[#F3F1EC] p-5 md:col-span-2"
+              >
+                <p class="font-semibold text-[#121212]">
+                  Орієнтовна вартість оренди
+                </p>
+                <p
+                  id="total-price"
+                  class="mt-1 text-3xl font-extrabold text-[#1D382B]"
+                >
+                  —
+                </p>
+
+                <dl class="space-y-3 text-[#121212]">
+                  <div class="flex items-center justify-between gap-4">
+                    <dt>Оренда</dt>
+                    <dd id="bd-rent" class="text-right font-bold">—</dd>
+                  </div>
+                  <div class="flex items-center justify-between gap-4">
+                    <dt>Знижка (від 7 діб)</dt>
+                    <dd id="bd-discount" class="text-right font-bold">—</dd>
+                  </div>
+                  <div class="flex items-center justify-between gap-4">
+                    <dt>Доставка</dt>
+                    <dd id="bd-delivery" class="text-right font-bold">—</dd>
+                  </div>
+                  <div class="flex items-center justify-between gap-4">
+                    <dt>Страхування</dt>
+                    <dd id="bd-insurance" class="text-right font-bold">—</dd>
+                  </div>
+                  <div class="flex items-center justify-between gap-4">
+                    <dt>Застава (повертається)</dt>
+                    <dd id="bd-deposit" class="text-right font-bold">
+                      1000 ₴
+                    </dd>
+                  </div>
+                </dl>
+
+                <p class="mt-4 text-sm text-[#595959]">
+                  Застава повертається після успішного повернення інструмента
+                </p>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+
       <!-- Переваги Escrow-моделі. -->
       <section
         id="escrow"
@@ -1280,6 +1430,7 @@
     </div>
     <script src="assets/js/validation.js" defer></script>
     <script src="assets/js/booking-validation.js" defer></script>
+    <script src="js/widget.js" defer></script>
 
     <!--Скрипти з CDN, JS-бібліотек  -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
