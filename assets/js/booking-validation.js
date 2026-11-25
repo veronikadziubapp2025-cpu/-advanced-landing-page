@@ -8,28 +8,19 @@ document.addEventListener("DOMContentLoaded", () => {
   const fromInput = document.getElementById("date-from");
   const toInput = document.getElementById("date-to");
   const commentInput = document.getElementById("comment");
-  const totalElement = document.getElementById("booking-total");
-  const submitButton = document.getElementById("booking-submit");
-  const submitText = document.getElementById("booking-submit-text");
-  const spinner = document.getElementById("booking-spinner");
 
   if (
     !(nameInput instanceof HTMLInputElement) ||
     !(phoneInput instanceof HTMLInputElement) ||
     !(fromInput instanceof HTMLInputElement) ||
     !(toInput instanceof HTMLInputElement) ||
-    !(commentInput instanceof HTMLTextAreaElement) ||
-    !(totalElement instanceof HTMLElement) ||
-    !(submitButton instanceof HTMLButtonElement) ||
-    !(submitText instanceof HTMLElement) ||
-    !(spinner instanceof HTMLElement)
+    !(commentInput instanceof HTMLTextAreaElement)
   ) {
     throw new Error("Не знайдено всі елементи форми бронювання.");
   }
 
   const touchedFields = new Set();
   const formFields = [nameInput, phoneInput, fromInput, toInput, commentInput];
-  let isSubmitting = false;
 
   // Допоміжна функція повертає елемент повідомлення про помилку.
   function getErrorElement(inputElement) {
@@ -211,23 +202,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return true;
   }
 
-  // Перераховує кількість діб та суму оренди.
-  function updatePrice() {
-    if (
-      !fromInput.value ||
-      !toInput.value ||
-      toInput.value <= fromInput.value
-    ) {
-      totalElement.textContent = "0 ₴";
-      return;
-    }
-
-    const start = new Date(`${fromInput.value}T00:00:00`);
-    const end = new Date(`${toInput.value}T00:00:00`);
-    const days = Math.round((end - start) / 86400000);
-    totalElement.textContent = days >= 1 ? `${days * 450} ₴` : "0 ₴";
-  }
-
   function validateTouchedField(inputElement) {
     if (inputElement === nameInput) return validateName();
     if (inputElement === phoneInput) return validatePhone();
@@ -277,13 +251,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   fromInput.addEventListener("change", () => {
     toInput.min = fromInput.value ? addOneDay(fromInput.value) : "";
-    updatePrice();
     if (touchedFields.has(fromInput)) validateFromDate();
     if (touchedFields.has(toInput) || toInput.value) validateToDate();
   });
 
   toInput.addEventListener("change", () => {
-    updatePrice();
     if (touchedFields.has(toInput)) validateToDate();
   });
 
@@ -296,7 +268,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   form.addEventListener("submit", (event) => {
     event.preventDefault();
-    if (isSubmitting) return;
 
     for (const inputElement of formFields) touchedFields.add(inputElement);
 
@@ -313,44 +284,6 @@ document.addEventListener("DOMContentLoaded", () => {
     );
     if (firstInvalidField) {
       firstInvalidField.focus();
-      return;
     }
-
-    // Увімкнення стану завантаження й тимчасове блокування всіх полів форми.
-    isSubmitting = true;
-    submitButton.disabled = true;
-    submitButton.setAttribute("aria-busy", "true");
-    submitText.textContent = "Надсилаємо...";
-    spinner.classList.remove("hidden");
-    for (const inputElement of formFields) inputElement.disabled = true;
-
-    // Імітуємо мережевий запит і після затримки показуємо результат.
-    window.setTimeout(() => {
-      isSubmitting = false;
-      submitButton.disabled = false;
-      submitButton.setAttribute("aria-busy", "false");
-      submitText.textContent = "Забронювати";
-      spinner.classList.add("hidden");
-      for (const inputElement of formFields) inputElement.disabled = false;
-
-      if (typeof window.openSuccessModal === "function") {
-        window.openSuccessModal({
-          text: "Ваше бронювання успішно оформлено. Очікуйте підтвердження власника.",
-          returnFocus: submitButton,
-          onClose: () => {
-            form.reset();
-            phoneInput.value = "+380 ";
-            fromInput.min = today;
-            toInput.min = "";
-            totalElement.textContent = "0 ₴";
-            touchedFields.clear();
-            for (const inputElement of formFields)
-              clearFieldState(inputElement);
-          },
-        });
-      }
-    }, 1500);
   });
-
-  updatePrice();
 });
