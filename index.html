@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="uk">
+<html lang="uk" class="scroll-smooth motion-reduce:scroll-auto">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -449,9 +449,7 @@
                   class="min-h-[48px] w-full rounded-xl border border-[#949494] bg-white px-4 py-3 text-base hover:border-[#595959] focus-visible:border-[#121212] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2"
                 >
                   <option value="basic">Тільки перфоратор</option>
-                  <option value="drills">
-                    + набір свердел (+50 ₴/доба)
-                  </option>
+                  <option value="drills">+ набір свердел (+50 ₴/доба)</option>
                   <option value="full">
                     + набір свердел і пилозбірник (+90 ₴/доба)
                   </option>
@@ -519,9 +517,7 @@
                   </div>
                   <div class="flex items-center justify-between gap-4">
                     <dt>Застава (повертається)</dt>
-                    <dd id="bd-deposit" class="text-right font-bold">
-                      1000 ₴
-                    </dd>
+                    <dd id="bd-deposit" class="text-right font-bold">1000 ₴</dd>
                   </div>
                 </dl>
 
@@ -530,6 +526,12 @@
                 </p>
               </div>
             </form>
+            <a
+              href="#feedback"
+              class="mt-5 inline-flex min-h-[48px] w-full items-center justify-center rounded-xl bg-[#00E676] px-5 py-3 text-center font-bold text-[#121212] shadow-sm transition-colors hover:bg-[#33EB91] active:bg-[#00C853] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2 sm:w-auto"
+            >
+              Перейти до форми зворотного зв’язку
+            </a>
           </div>
         </div>
       </section>
@@ -1006,7 +1008,7 @@
         </div>
         <section
           id="feedback"
-          class="w-full bg-[#F4F3EE] px-4 py-8 font-[Inter,system-ui,sans-serif] sm:px-6 sm:py-12 lg:px-8 lg:py-16"
+          class="w-full scroll-mt-24 bg-[#F4F3EE] px-4 py-8 font-[Inter,system-ui,sans-serif] sm:px-6 sm:py-12 lg:px-8 lg:py-16"
           aria-labelledby="feedback-title"
         >
           <div class="mx-auto w-full max-w-2xl">
