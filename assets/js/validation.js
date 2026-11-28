@@ -635,6 +635,21 @@ document.addEventListener("DOMContentLoaded", () => {
       datesResult.firstInvalidField.focus();
       return;
     }
+    if (mode === "booking") {
+      const rentDaysInput = document.getElementById("rent-days");
+      const rentDays = Number(rentDaysInput?.value);
+      if (!Number.isInteger(rentDays) || rentDays < 1 || rentDays > 30) {
+        if (rentDaysInput instanceof HTMLInputElement) {
+          rentDaysInput.dataset.validationMessage =
+            rentDaysInput.value.trim() === ""
+              ? "Вкажіть кількість діб від 1 до 30."
+              : "Вкажіть ціле число діб від 1 до 30.";
+          rentDaysInput.dispatchEvent(new Event("input", { bubbles: true }));
+          rentDaysInput.focus();
+        }
+        return;
+      }
+    }
     // Якщо є хоч одна помилка — ставимо курсор (фокус) у перше невалідне поле і зупиняємо відправку.
     if (!result.valid && result.firstInvalidField) {
       result.firstInvalidField.focus();

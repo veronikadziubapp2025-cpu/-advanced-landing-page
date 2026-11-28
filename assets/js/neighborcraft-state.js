@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const defaultState = {
     dateFrom: "",
     dateTo: "",
-    rentDays: 3,
+    rentDays: 0,
     kitType: "basic",
     delivery: false,
     insurance: false,
@@ -97,7 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
       state.rentDays =
         Number.isInteger(saved.rentDays) && saved.rentDays >= 1 && saved.rentDays <= 30
           ? saved.rentDays
-          : 3;
+          : 0;
       state.kitType = Object.prototype.hasOwnProperty.call(
         kitNames,
         saved.kitType,
@@ -386,6 +386,11 @@ document.addEventListener("DOMContentLoaded", () => {
   checkoutButton.addEventListener("click", () => {
     const days = Number(daysInput.value);
     if (!Number.isInteger(days) || days < 1 || days > 30) {
+      daysInput.dataset.validationMessage =
+        daysInput.value.trim() === ""
+          ? "Вкажіть кількість діб від 1 до 30."
+          : "Вкажіть ціле число діб від 1 до 30.";
+      daysInput.dispatchEvent(new Event("input", { bubbles: true }));
       daysInput.focus();
       return;
     }
@@ -417,7 +422,7 @@ document.addEventListener("DOMContentLoaded", () => {
     fromInput.value = "";
     toInput.value = "";
     toInput.min = "";
-    daysInput.value = String(defaultState.rentDays);
+    daysInput.value = "";
     bookingKit.value = defaultState.kitType;
     calcKit.value = defaultState.kitType;
     deliveryInput.checked = false;

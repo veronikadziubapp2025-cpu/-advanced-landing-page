@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
     errorElement.classList.add("hidden");
   }
 
-  function updateCalculator() {
+  function updateCalculator(showEmptyError = true) {
     const rawDays = daysInput.value.trim();
     const days = rawDays === "" ? Number.NaN : Number(rawDays);
 
@@ -110,6 +110,11 @@ document.addEventListener("DOMContentLoaded", () => {
       days < 1 ||
       days > 30
     ) {
+      if (rawDays === "" && !daysInput.dataset.validationMessage) {
+        clearDaysError();
+        clearPrices();
+        return;
+      }
       const message =
         daysInput.dataset.validationMessage ||
         (rawDays === ""
@@ -156,10 +161,10 @@ document.addEventListener("DOMContentLoaded", () => {
     totalElement.textContent = formatPrice(calculation.total);
   }
 
-  daysInput.addEventListener("input", updateCalculator);
-  kitSelect.addEventListener("change", updateCalculator);
-  deliveryCheckbox.addEventListener("change", updateCalculator);
-  insuranceCheckbox.addEventListener("change", updateCalculator);
+  daysInput.addEventListener("input", () => updateCalculator(true));
+  kitSelect.addEventListener("change", () => updateCalculator(true));
+  deliveryCheckbox.addEventListener("change", () => updateCalculator(true));
+  insuranceCheckbox.addEventListener("change", () => updateCalculator(true));
 
-  updateCalculator();
+  updateCalculator(false);
 });
