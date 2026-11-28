@@ -1,8 +1,8 @@
 // Шаблон (регулярний вираз) для перевірки email: текст + @ + домен + крапка + зона мінімум з 2 літер.
 const REGEX_EMAIL = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-// Шаблон для суворого українського формату: початок рядка, +380, рівно 9 цифр, кінець рядка.
-const REGEX_PHONE = /^\+380\d{9}$/;
+// Шаблон для українського номера з маскою +380 XX XXX XX XX.
+const REGEX_PHONE = /^\+380 \d{2} \d{3} \d{2} \d{2}$/;
 
 // Чекаємо, поки весь HTML-документ повністю завантажиться в браузері, і тільки тоді запускаємо скрипт.
 document.addEventListener("DOMContentLoaded", () => {
@@ -218,18 +218,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Якщо номер починається з 0 і має ще 9 цифр (напр. 0991234567) — додаємо спереду +38.
     if (/^0\d{9}$/.test(cleanedValue)) {
-      return `+38${cleanedValue}`;
+      return formatPhone(cleanedValue);
     }
     // Якщо номер починається з 380 і має ще 9 цифр (напр. 380991234567) — додаємо спереду +.
     if (/^380\d{9}$/.test(cleanedValue)) {
-      return `+${cleanedValue}`;
+      return formatPhone(cleanedValue);
     }
     // Якщо номер вже правильний (+380...), просто повертаємо очищений від пробілів/дужок варіант.
     if (/^\+380\d{9}$/.test(cleanedValue)) {
-      return cleanedValue;
+      return formatPhone(cleanedValue);
     }
     // Якщо введено щось незрозуміле або занадто коротке — нічого не пропонуємо.
     return null;
+  }
+
+  function formatPhone(value) {
+    let digits = value.replace(/\D/g, "");
+    if (digits.startsWith("380")) digits = digits.slice(3);
+    else if (digits.startsWith("38") && digits.length > 2) {
+      digits = digits.slice(2);
+    } else if (digits.startsWith("0")) digits = digits.slice(1);
+
+    digits = digits.slice(0, 9);
+    let formatted = "+380 ";
+    if (digits.length > 0) formatted += digits.slice(0, 2);
+    if (digits.length > 2) formatted += ` ${digits.slice(2, 5)}`;
+    if (digits.length > 5) formatted += ` ${digits.slice(5, 7)}`;
+    if (digits.length > 7) formatted += ` ${digits.slice(7, 9)}`;
+    return formatted;
   }
 
   // Валідація поля ІМ'Я:
@@ -279,13 +295,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const value = inputElement.value.trim();
 
     // Якщо поле взагалі порожнє — показуємо помилку і ховаємо підказку автовиправлення.
-    if (!value) {
+    if (!value || value === "+380") {
       showErr(inputElement, errorElement, "Введіть номер телефону.");
       hidePhoneHint();
       return false;
     }
 
-    // Якщо номер відповідає суворому шаблону +380XXXXXXXXX — все супер, вмикаємо успіх.
+    // Якщо номер відповідає масці +380 XX XXX XX XX — все супер.
     if (REGEX_PHONE.test(value)) {
       showSuccess(inputElement, errorElement);
       hidePhoneHint();
@@ -296,7 +312,7 @@ document.addEventListener("DOMContentLoaded", () => {
     showErr(
       inputElement,
       errorElement,
-      "Формат має бути строго українським: +380XXXXXXXXX.",
+      "Введіть повний номер у форматі +380 XX XXX XX XX.",
     );
 
     // Пробуємо вгадати, що мав на увазі користувач, і показати кнопку підказки.
@@ -316,7 +332,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const inputElement = messageInput;
     const errorElement = getErrorElement("message");
     const value = inputElement.value.trim();
-    // Перевіряємо довжину тексту: від 10 до 1000 символів.
+    if (window.neighborCraftState?.mode !== "question") {
+      clearError(inputElement, errorElement);
+      return true;
+    }
+
     const valid = value.length >= 10 && value.length <= 1000;
     if (valid) {
       showSuccess(inputElement, errorElement);
@@ -357,7 +377,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Імітація відправки форми на сервер (оскільки бекенд не підключений):
-  function simulateSubmit() {
+  function simulateSubmit(mode) {
     // Якщо вже йде відправка — нічого не робимо (захист від повторних кліків).
     if (isSubmitting) return;
     isSubmitting = true;
@@ -367,28 +387,42 @@ document.addEventListener("DOMContentLoaded", () => {
     submitButton.disabled = true;
     submitButton.textContent = "Надсилаємо…";
 
-    // Запускаємо таймер на 600 мс (імітуємо затримку відповіді сервера).
     window.setTimeout(() => {
-      // Встановлюємо текст для звичайної форми зворотного зв'язку.
-      if (successText instanceof HTMLElement) {
-        successText.textContent =
-          "Дякуємо! Ваше повідомлення успішно надіслано.";
+      const state = window.neighborCraftState;
+      if (!state || typeof window.openSuccessModal !== "function") {
+        throw new Error("Не вдалося відкрити модальне вікно підтвердження.");
       }
-      modalCloseCallback = null;
-      // Відкриваємо модальне вікно успіху.
-      openModal();
-      // Очищаємо всі введені дані у формі.
-      form.reset();
-      // Очищаємо список торкань до полів.
-      touchedFields.clear();
-      // Проходимо по всіх полях і скидаємо їхні зелені рамки та іконки до початкового стану.
-      for (const inputElement of formFields) {
-        clearError(inputElement, getErrorElement(inputElement.id));
+
+      let confirmationText = "Дякуємо! Ваше повідомлення успішно надіслано.";
+      if (mode === "booking") {
+        const requestNumber = `NC-${Math.floor(1000 + Math.random() * 9000)}`;
+        const formatDate = (value) =>
+          new Intl.DateTimeFormat("uk-UA", { timeZone: "UTC" }).format(
+            new Date(`${value}T00:00:00Z`),
+          );
+        const amount = new Intl.NumberFormat("uk-UA", {
+          maximumFractionDigits: 0,
+        }).format(state.totalPrice);
+        confirmationText = `Дякуємо, ${state.name}! Заявку #${requestNumber} створено. Дати оренди: ${formatDate(state.dateFrom)}–${formatDate(state.dateTo)}. До сплати: ${amount} ₴ + 1 000 ₴ застави.`;
       }
-      // Повертаємо кнопці активний стан і початковий текст.
-      submitButton.disabled = false;
-      submitButton.textContent = "Надіслати";
-      isSubmitting = false;
+
+      window.openSuccessModal({
+        text: confirmationText,
+        returnFocus: submitButton,
+        onClose: () => {
+          if (typeof window.resetNeighborCraftState !== "function") {
+            throw new Error("Не вдалося скинути збережений стан бронювання.");
+          }
+          window.resetNeighborCraftState();
+          touchedFields.clear();
+          for (const inputElement of formFields) {
+            clearError(inputElement, getErrorElement(inputElement.id));
+          }
+          submitButton.disabled = false;
+          submitButton.textContent = "Підтвердити бронювання";
+          isSubmitting = false;
+        },
+      });
     }, 600);
   }
 
@@ -528,6 +562,13 @@ document.addEventListener("DOMContentLoaded", () => {
     messageInput,
   ]) {
     inputElement.addEventListener("input", () => {
+      if (inputElement === phoneInput) {
+        phoneInput.value = formatPhone(phoneInput.value);
+        phoneInput.setSelectionRange(
+          phoneInput.value.length,
+          phoneInput.value.length,
+        );
+      }
       // Перевіряємо поле на льоту ТІЛЬКИ якщо користувач вже виходив із нього (воно є в touchedFields).
       if (touchedFields.has(inputElement)) {
         validateTouchedField(inputElement);
@@ -583,8 +624,17 @@ document.addEventListener("DOMContentLoaded", () => {
     for (const inputElement of formFields) {
       touchedFields.add(inputElement);
     }
+    const mode = window.neighborCraftState?.mode ?? "booking";
+    const datesResult =
+      mode === "booking"
+        ? window.validateBookingDates()
+        : { valid: true, firstInvalidField: null };
     // Запускаємо загальну перевірку форми.
     const result = validateForm();
+    if (!datesResult.valid && datesResult.firstInvalidField) {
+      datesResult.firstInvalidField.focus();
+      return;
+    }
     // Якщо є хоч одна помилка — ставимо курсор (фокус) у перше невалідне поле і зупиняємо відправку.
     if (!result.valid && result.firstInvalidField) {
       result.firstInvalidField.focus();
@@ -592,7 +642,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Якщо всі поля заповнені правильно — запускаємо імітацію відправки.
-    simulateSubmit();
+    simulateSubmit(mode);
   });
 
   // Закриття модального вікна при кліку на кнопку "Закрити".

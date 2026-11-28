@@ -223,7 +223,7 @@
         >
           <h2 class="text-2xl font-extrabold">Забронювати перфоратор</h2>
           <p class="mt-1 text-sm text-[#595959]">
-            Заповни дані, і власник підтвердить бронь.
+            Оберіть дати та комплектацію — далі ви перейдете до детального розрахунку.
           </p>
 
           <form
@@ -231,54 +231,6 @@
             class="mt-6 space-y-4"
             novalidate
           >
-            <div>
-              <label for="booking-name" class="mb-1 block text-sm font-bold"
-                >Ім'я</label
-              >
-              <input
-                type="text"
-                id="booking-name"
-                name="Ім'я"
-                autocomplete="name"
-                minlength="2"
-                placeholder="Наприклад, Вероніка"
-                aria-describedby="bookingNameError"
-                aria-invalid="false"
-                class="min-h-[44px] w-full rounded-xl border border-[#E5E7EB] bg-white px-3 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2 aria-[invalid=true]:border-[#B91C1C] data-[valid=true]:border-[#1D382B]"
-                required
-              />
-              <p
-                id="bookingNameError"
-                class="mt-1 hidden text-sm font-medium text-[#B91C1C]"
-                aria-live="polite"
-              ></p>
-            </div>
-
-            <div>
-              <label for="booking-phone" class="mb-1 block text-sm font-bold"
-                >Телефон</label
-              >
-              <input
-                type="tel"
-                id="booking-phone"
-                name="Телефон"
-                autocomplete="tel"
-                inputmode="tel"
-                maxlength="17"
-                value="+380 "
-                placeholder="+380 XX XXX XX XX"
-                aria-describedby="bookingPhoneError"
-                aria-invalid="false"
-                class="min-h-[44px] w-full rounded-xl border border-[#E5E7EB] bg-white px-3 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2 aria-[invalid=true]:border-[#B91C1C] data-[valid=true]:border-[#1D382B]"
-                required
-              />
-              <p
-                id="bookingPhoneError"
-                class="mt-1 hidden text-sm font-medium text-[#B91C1C]"
-                aria-live="polite"
-              ></p>
-            </div>
-
             <div class="grid grid-cols-2 gap-3">
               <div class="min-w-0">
                 <label for="date-from" class="mb-1 block text-sm font-bold"
@@ -321,35 +273,30 @@
             </div>
 
             <div>
-              <label for="comment" class="mb-1 block text-sm font-bold"
-                >Коментар
-                <span class="font-normal text-[#595959]"
-                  >(необов'язково)</span
-                ></label
+              <label for="booking-kit-type" class="mb-1 block text-sm font-bold">Комплектація</label>
+              <select
+                id="booking-kit-type"
+                name="Комплектація"
+                class="min-h-[44px] w-full rounded-xl border border-[#E5E7EB] bg-white px-3 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2"
               >
-              <textarea
-                id="comment"
-                name="Коментар"
-                rows="3"
-                maxlength="300"
-                placeholder="Наприклад, зручний час для зустрічі"
-                aria-describedby="commentError"
-                aria-invalid="false"
-                class="w-full rounded-xl border border-[#E5E7EB] bg-white px-3 py-2 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2 aria-[invalid=true]:border-[#B91C1C] data-[valid=true]:border-[#1D382B]"
-              ></textarea>
-              <p
-                id="commentError"
-                class="mt-1 hidden text-sm font-medium text-[#B91C1C]"
-                aria-live="polite"
-              ></p>
+                <option value="basic">Тільки перфоратор</option>
+                <option value="drills">+ набір свердел (+50 ₴/доба)</option>
+                <option value="full">+ набір свердел і пилозбірник (+90 ₴/доба)</option>
+              </select>
             </div>
 
-            <a
-              href="#rental-calculator"
+            <p
+              id="booking-price-summary"
+              class="min-h-[44px] rounded-xl bg-[#F3F1EC] px-4 py-3 text-center text-sm font-bold text-[#121212]"
+              aria-live="polite"
+            >Оберіть дати оренди, щоб побачити підсумок.</p>
+
+            <button
+              type="submit"
               class="inline-flex min-h-[48px] w-full items-center justify-center rounded-xl bg-[#00E676] px-5 text-center text-base font-bold text-[#121212] shadow-sm transition-all duration-200 ease-in-out hover:bg-[#33EB91] hover:shadow-md active:bg-[#00C853] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2"
             >
-              Перейти до калькулятора оренди
-            </a>
+              Розрахувати детально
+            </button>
           </form>
         </div>
       </section>
@@ -397,6 +344,7 @@
                   required
                   inputmode="numeric"
                   aria-describedby="error-days"
+                  aria-invalid="false"
                   class="min-h-[48px] w-full rounded-xl border border-[#949494] bg-white px-4 py-3 text-base hover:border-[#595959] focus-visible:border-[#121212] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2"
                 />
                 <p
@@ -496,12 +444,13 @@
                 </p>
               </div>
             </form>
-            <a
-              href="#feedback"
+            <button
+              id="proceed-to-checkout"
+              type="button"
               class="mt-5 inline-flex min-h-[48px] w-full items-center justify-center rounded-xl bg-[#00E676] px-5 py-3 text-center font-bold text-[#121212] shadow-sm transition-colors hover:bg-[#33EB91] active:bg-[#00C853] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2 sm:w-auto"
             >
-              Перейти до форми зворотного зв’язку
-            </a>
+              Перейти до підтвердження бронювання
+            </button>
           </div>
         </div>
       </section>
@@ -997,6 +946,60 @@
               class="grid w-full grid-cols-1 gap-4 rounded-2xl border border-[#E5E7EB] bg-white p-4 shadow-sm sm:gap-6 sm:p-6 md:grid-cols-2 lg:p-8"
               novalidate
             >
+              <div
+                class="grid grid-cols-2 gap-1 rounded-xl bg-[#F3F1EC] p-1 md:col-span-2"
+                role="tablist"
+                aria-label="Режим форми"
+              >
+                <button
+                  id="booking-mode-tab"
+                  type="button"
+                  role="tab"
+                  aria-selected="true"
+                  aria-controls="booking-summary"
+                  tabindex="0"
+                  class="min-h-[48px] rounded-lg bg-white px-3 text-sm font-bold shadow-sm text-[#121212] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212]"
+                >Підтвердити бронювання</button>
+                <button
+                  id="question-mode-tab"
+                  type="button"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="feedback-form"
+                  tabindex="-1"
+                  class="min-h-[48px] rounded-lg px-3 text-sm font-bold text-[#595959] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212]"
+                >Задати питання</button>
+              </div>
+
+              <div
+                id="booking-summary"
+                role="tabpanel"
+                aria-live="polite"
+                class="md:col-span-2 rounded-xl border border-[#D9FBE8] bg-[#F4FBF7] p-4"
+              >
+                <p class="font-bold text-[#176B3A]">Чек бронювання</p>
+                <dl class="mt-3 grid gap-2 text-sm sm:grid-cols-2">
+                  <div><dt class="text-[#595959]">Дати</dt><dd id="summary-dates" class="font-bold">Не обрано</dd></div>
+                  <div><dt class="text-[#595959]">Кількість діб</dt><dd id="summary-days" class="font-bold">Не обрано</dd></div>
+                  <div><dt class="text-[#595959]">Комплектація</dt><dd id="summary-kit" class="font-bold">Тільки перфоратор</dd></div>
+                  <div><dt class="text-[#595959]">Доставка</dt><dd id="summary-delivery" class="font-bold">Ні</dd></div>
+                  <div><dt class="text-[#595959]">Страхування</dt><dd id="summary-insurance" class="font-bold">Ні</dd></div>
+                  <div><dt class="text-[#595959]">До сплати</dt><dd id="summary-total" class="font-bold text-[#176B3A]">—</dd></div>
+                </dl>
+              </div>
+
+              <div
+                id="booking-summary-prompt"
+                class="hidden md:col-span-2 rounded-xl border border-[#E5E7EB] bg-[#F4F3EE] p-4"
+              >
+                <p class="text-sm text-[#595959]">Для підтвердження бронювання спочатку оберіть дати оренди.</p>
+                <button
+                  id="return-to-booking"
+                  type="button"
+                  class="mt-3 min-h-[44px] rounded-xl border border-[#121212] px-4 font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2"
+                >Повернутися до вибору дат</button>
+              </div>
+
               <div class="min-w-0">
                 <label
                   for="name"
@@ -1105,7 +1108,11 @@
                     id="phone"
                     name="phone"
                     autocomplete="tel"
-                    aria-describedby="phoneError"
+                    inputmode="tel"
+                    maxlength="17"
+                    value="+380 "
+                    placeholder="+380 XX XXX XX XX"
+                    aria-describedby="phoneError phoneHint"
                     aria-invalid="false"
                     class="peer min-h-[48px] w-full rounded-xl border border-[#949494] bg-white px-4 py-3 pr-10 text-base text-[#121212] transition-colors duration-200 hover:border-[#595959] focus-visible:border-[#121212] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2 aria-[invalid=true]:border-[#B91C1C] data-[valid=true]:border-[#1D382B]"
                     required
@@ -1159,7 +1166,9 @@
                 <label
                   for="message"
                   class="mb-1 block text-sm font-semibold text-[#121212]"
-                  >Повідомлення *</label
+                  >Повідомлення
+                  <span id="message-required-mark" aria-hidden="true">*</span>
+                  <span id="message-optional-mark" class="hidden font-normal text-[#595959]">(необов'язково для бронювання)</span></label
                 >
                 <div class="relative">
                   <textarea
@@ -1403,6 +1412,7 @@
     <script src="assets/js/validation.js" defer></script>
     <script src="assets/js/booking-validation.js" defer></script>
     <script src="js/widget.js" defer></script>
+    <script src="assets/js/neighborcraft-state.js" defer></script>
 
     <!--Скрипти з CDN, JS-бібліотек  -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>

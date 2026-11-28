@@ -37,6 +37,29 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   const formatPrice = (amount) => `${formatter.format(amount)} ₴`;
 
+  window.calculateRentalPrice = (days, kitType, hasDelivery, hasInsurance) => {
+    if (
+      !Number.isInteger(days) ||
+      days < 1 ||
+      days > 30 ||
+      !Object.prototype.hasOwnProperty.call(kitPrices, kitType)
+    ) {
+      return null;
+    }
+
+    const rent = (450 + kitPrices[kitType]) * days;
+    const discount = days >= 7 ? Math.round(rent * 0.1) : 0;
+    const delivery = hasDelivery ? 80 : 0;
+    const insurance = hasInsurance ? 30 * days : 0;
+    const total = rent - discount + delivery + insurance;
+
+    if (![rent, discount, delivery, insurance, total].every(Number.isFinite)) {
+      return null;
+    }
+
+    return { rent, discount, delivery, insurance, total };
+  };
+
   function clearPrices() {
     totalElement.textContent = "—";
     rentElement.textContent = "—";
@@ -88,13 +111,16 @@ document.addEventListener("DOMContentLoaded", () => {
       days > 30
     ) {
       const message =
-        rawDays === ""
+        daysInput.dataset.validationMessage ||
+        (rawDays === ""
           ? "Вкажіть кількість діб від 1 до 30."
-          : "Вкажіть ціле число діб від 1 до 30.";
+          : "Вкажіть ціле число діб від 1 до 30.");
+      delete daysInput.dataset.validationMessage;
       showDaysError(message);
       return;
     }
 
+    delete daysInput.dataset.validationMessage;
     const hasKitPrice = Object.prototype.hasOwnProperty.call(
       kitPrices,
       kitSelect.value,
@@ -108,14 +134,13 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    const kitSurcharge = kitPrices[kitSelect.value];
-    const rent = (450 + kitSurcharge) * days;
-    const discount = days >= 7 ? Math.round(rent * 0.1) : 0;
-    const delivery = deliveryCheckbox.checked ? 80 : 0;
-    const insurance = insuranceCheckbox.checked ? 30 * days : 0;
-    const total = rent - discount + delivery + insurance;
-
-    if (![rent, discount, delivery, insurance, total].every(Number.isFinite)) {
+    const calculation = window.calculateRentalPrice(
+      days,
+      kitSelect.value,
+      deliveryCheckbox.checked,
+      insuranceCheckbox.checked,
+    );
+    if (!calculation) {
       clearDaysError();
       clearPrices();
       console.error("Не вдалося обчислити коректну вартість оренди.");
@@ -123,12 +148,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     clearDaysError();
-    rentElement.textContent = formatPrice(rent);
-    discountElement.textContent = formatPrice(discount);
-    deliveryElement.textContent = formatPrice(delivery);
-    insuranceElement.textContent = formatPrice(insurance);
+    rentElement.textContent = formatPrice(calculation.rent);
+    discountElement.textContent = formatPrice(calculation.discount);
+    deliveryElement.textContent = formatPrice(calculation.delivery);
+    insuranceElement.textContent = formatPrice(calculation.insurance);
     depositElement.textContent = "1000 ₴";
-    totalElement.textContent = formatPrice(total);
+    totalElement.textContent = formatPrice(calculation.total);
   }
 
   daysInput.addEventListener("input", updateCalculator);
