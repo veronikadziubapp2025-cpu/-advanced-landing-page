@@ -32,10 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
     drills: 50,
     full: 90,
   };
-  const formatter = new Intl.NumberFormat("uk-UA", {
-    maximumFractionDigits: 0,
-  });
-  const formatPrice = (amount) => `${formatter.format(amount)} ₴`;
+  const { formatPrice } = window.NeighborCraftUtils;
 
   window.calculateRentalPrice = (days, kitType, hasDelivery, hasInsurance) => {
     if (
@@ -100,7 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
     errorElement.classList.add("hidden");
   }
 
-  function updateCalculator(showEmptyError = true) {
+  function updateCalculator() {
     const rawDays = daysInput.value.trim();
     const days = rawDays === "" ? Number.NaN : Number(rawDays);
 
@@ -161,10 +158,11 @@ document.addEventListener("DOMContentLoaded", () => {
     totalElement.textContent = formatPrice(calculation.total);
   }
 
-  daysInput.addEventListener("input", () => updateCalculator(true));
-  kitSelect.addEventListener("change", () => updateCalculator(true));
-  deliveryCheckbox.addEventListener("change", () => updateCalculator(true));
-  insuranceCheckbox.addEventListener("change", () => updateCalculator(true));
+  daysInput.addEventListener("input", updateCalculator);
+  kitSelect.addEventListener("change", updateCalculator);
+  deliveryCheckbox.addEventListener("change", updateCalculator);
+  insuranceCheckbox.addEventListener("change", updateCalculator);
 
-  updateCalculator(false);
+  window.updateRentalCalculator = updateCalculator;
+  updateCalculator();
 });

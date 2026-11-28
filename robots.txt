@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://advanced-landing-page-vcraft2.vercel.app/sitemap.xml

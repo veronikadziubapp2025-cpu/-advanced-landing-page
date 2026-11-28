@@ -21,6 +21,9 @@ document.addEventListener("DOMContentLoaded", () => {
     mode: "booking",
   };
   const state = { ...defaultState };
+  const { addDays, formatDate, formatPrice, getTodayValue } =
+    window.NeighborCraftUtils;
+  let pendingSave;
 
   const bookingForm = getElement("booking-form", HTMLFormElement);
   const calcForm = getElement("calc-form", HTMLFormElement);
@@ -126,11 +129,17 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function saveState() {
+    window.clearTimeout(pendingSave);
     try {
       localStorage.setItem(storageKey, JSON.stringify(state));
     } catch (error) {
       console.error("Не вдалося зберегти стан NeighborCraft у localStorage.", error);
     }
+  }
+
+  function scheduleSave() {
+    window.clearTimeout(pendingSave);
+    pendingSave = window.setTimeout(saveState, 250);
   }
 
   function dateDifference(from, to) {
@@ -139,44 +148,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const end = Date.parse(`${to}T00:00:00Z`);
     if (!Number.isFinite(start) || !Number.isFinite(end)) return null;
     return Math.round((end - start) / 86400000);
-  }
-
-  function addDays(dateValue, days) {
-    const date = new Date(`${dateValue}T00:00:00Z`);
-    date.setUTCDate(date.getUTCDate() + days);
-    return date.toISOString().slice(0, 10);
-  }
-
-  function formatPrice(amount) {
-    return `${new Intl.NumberFormat("uk-UA", {
-      maximumFractionDigits: 0,
-    }).format(amount)} ₴`;
-  }
-
-  function formatDate(dateValue) {
-    if (!dateValue) return "";
-    return new Intl.DateTimeFormat("uk-UA", {
-      timeZone: "UTC",
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    }).format(new Date(`${dateValue}T00:00:00Z`));
-  }
-
-  function getTodayValue() {
-    const today = new Date();
-    return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
-  }
-
-  function getCalculation() {
-    const days = Number(daysInput.value);
-    if (!Number.isInteger(days)) return null;
-    return window.calculateRentalPrice(
-      days,
-      calcKit.value,
-      deliveryInput.checked,
-      insuranceInput.checked,
-    );
   }
 
   function readFormState() {
@@ -191,8 +162,6 @@ document.addEventListener("DOMContentLoaded", () => {
     state.email = emailInput.value;
     state.comment = messageInput.value;
     state.consent = consentInput.checked;
-    const calculation = getCalculation();
-    state.totalPrice = calculation ? calculation.total : 0;
   }
 
   function renderSummary() {
@@ -202,7 +171,16 @@ document.addEventListener("DOMContentLoaded", () => {
       days >= 1 &&
       days <= 30 &&
       state.dateFrom >= getTodayValue();
-    const calculation = getCalculation();
+    const daysForCalculation = validDateRange ? days : Number(daysInput.value);
+    const calculation =
+      Number.isInteger(daysForCalculation) && daysForCalculation >= 1
+        ? window.calculateRentalPrice(
+            daysForCalculation,
+            calcKit.value,
+            deliveryInput.checked,
+            insuranceInput.checked,
+          )
+        : null;
 
     summaryFields.dates.textContent = validDateRange
       ? `${formatDate(state.dateFrom)} — ${formatDate(state.dateTo)}`
@@ -219,18 +197,8 @@ document.addEventListener("DOMContentLoaded", () => {
       : "—";
     summaryPrompt.classList.toggle("hidden", validDateRange);
 
-    const daysForHero = validDateRange ? days : Number(daysInput.value);
-    const heroCalculation =
-      Number.isInteger(daysForHero) && daysForHero > 0
-        ? window.calculateRentalPrice(
-            daysForHero,
-            calcKit.value,
-            deliveryInput.checked,
-            insuranceInput.checked,
-          )
-        : null;
-    summaryFields.price.textContent = heroCalculation
-      ? `Разом: ${formatPrice(heroCalculation.total)} (${daysForHero} ${getDayWord(daysForHero)}) + 1 000 ₴ застава`
+    summaryFields.price.textContent = calculation
+      ? `Разом: ${formatPrice(calculation.total)} (${daysForCalculation} ${getDayWord(daysForCalculation)}) + 1 000 ₴ застава`
       : "Оберіть дати оренди, щоб побачити підсумок.";
     state.totalPrice = calculation ? calculation.total : 0;
   }
@@ -244,7 +212,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return "діб";
   }
 
-  function setMode(mode) {
+  function setMode(mode, persist = true) {
     state.mode = mode;
     const bookingMode = mode === "booking";
     bookingTab.setAttribute("aria-selected", String(bookingMode));
@@ -266,8 +234,10 @@ document.addEventListener("DOMContentLoaded", () => {
     submitButton.textContent = bookingMode
       ? "Підтвердити бронювання"
       : "Надіслати повідомлення";
-    messageInput.dispatchEvent(new Event("input", { bubbles: true }));
-    saveState();
+    if (messageInput.getAttribute("aria-invalid") === "true") {
+      window.validateFeedbackMessage?.();
+    }
+    if (persist) saveState();
   }
 
   function restoreFormValues() {
@@ -290,73 +260,76 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     toInput.min = fromInput.value ? addDays(fromInput.value, 1) : "";
-    setMode(state.mode);
-    synchronizing = true;
-    for (const eventName of ["input", "change"]) {
-      daysInput.dispatchEvent(new Event(eventName, { bubbles: true }));
-      calcKit.dispatchEvent(new Event(eventName, { bubbles: true }));
-      deliveryInput.dispatchEvent(new Event(eventName, { bubbles: true }));
-      insuranceInput.dispatchEvent(new Event(eventName, { bubbles: true }));
-    }
-    synchronizing = false;
+    setMode(state.mode, false);
     readFormState();
+    window.updateRentalCalculator();
     renderSummary();
-    saveState();
   }
 
-  let synchronizing = false;
   function syncFromDates() {
     const days = dateDifference(fromInput.value, toInput.value);
     daysInput.value = days === null ? "" : String(days);
-    daysInput.dispatchEvent(new Event("input", { bubbles: true }));
+    delete daysInput.dataset.validationMessage;
   }
 
   function syncToDate() {
     const days = Number(daysInput.value);
-    if (
-      !fromInput.value ||
-      !Number.isInteger(days) ||
-      days < 1 ||
-      days > 30
-    ) {
-      return;
-    }
-
-    toInput.value = addDays(fromInput.value, days);
+    if (!fromInput.value) return;
     toInput.min = addDays(fromInput.value, 1);
-    toInput.dispatchEvent(new Event("change", { bubbles: true }));
+    toInput.value =
+      Number.isInteger(days) && days >= 1 && days <= 30
+        ? addDays(fromInput.value, days)
+        : "";
   }
 
-  function handleFormChange(event) {
-    if (synchronizing) {
+  function handleInput(event) {
+    if (event.target === daysInput) {
+      syncToDate();
       readFormState();
       renderSummary();
-      saveState();
-      return;
+      window.updateRentalCalculator();
+    } else {
+      readFormState();
     }
+    scheduleSave();
+  }
 
-    synchronizing = true;
+  function handleChange(event) {
+    let updatePrices = false;
     if (event.target === fromInput || event.target === toInput) {
       syncFromDates();
-    } else if (event.target === daysInput) {
-      syncToDate();
+      updatePrices = true;
     } else if (event.target === bookingKit) {
       calcKit.value = bookingKit.value;
-      calcKit.dispatchEvent(new Event("change", { bubbles: true }));
+      updatePrices = true;
     } else if (event.target === calcKit) {
       bookingKit.value = calcKit.value;
-      bookingKit.dispatchEvent(new Event("change", { bubbles: true }));
+      updatePrices = true;
+    } else if (event.target === deliveryInput || event.target === insuranceInput) {
+      updatePrices = true;
     }
-    synchronizing = false;
-
     readFormState();
-    renderSummary();
+    if (updatePrices) {
+      renderSummary();
+      window.updateRentalCalculator();
+    }
     saveState();
   }
 
-  for (const form of [bookingForm, calcForm, feedbackForm]) {
-    form.addEventListener("input", handleFormChange);
-    form.addEventListener("change", handleFormChange);
+  daysInput.addEventListener("input", handleInput);
+  for (const input of [nameInput, phoneInput, emailInput, messageInput]) {
+    input.addEventListener("input", handleInput);
+  }
+  for (const input of [
+    fromInput,
+    toInput,
+    bookingKit,
+    calcKit,
+    deliveryInput,
+    insuranceInput,
+    consentInput,
+  ]) {
+    input.addEventListener("change", handleChange);
   }
 
   bookingTab.addEventListener("click", () => setMode("booking"));
@@ -390,7 +363,7 @@ document.addEventListener("DOMContentLoaded", () => {
         daysInput.value.trim() === ""
           ? "Вкажіть кількість діб від 1 до 30."
           : "Вкажіть ціле число діб від 1 до 30.";
-      daysInput.dispatchEvent(new Event("input", { bubbles: true }));
+      window.updateRentalCalculator();
       daysInput.focus();
       return;
     }
@@ -410,6 +383,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   window.neighborCraftState = state;
   window.resetNeighborCraftState = () => {
+    window.clearTimeout(pendingSave);
     Object.assign(state, defaultState);
     bookingForm.reset();
     calcForm.reset();
@@ -432,19 +406,11 @@ document.addEventListener("DOMContentLoaded", () => {
     emailInput.value = "";
     messageInput.value = "";
     consentInput.checked = false;
-    setMode("booking");
-    daysInput.dispatchEvent(new Event("input", { bubbles: true }));
-    calcKit.dispatchEvent(new Event("change", { bubbles: true }));
-    deliveryInput.dispatchEvent(new Event("change", { bubbles: true }));
-    insuranceInput.dispatchEvent(new Event("change", { bubbles: true }));
+    setMode("booking", false);
+    window.updateRentalCalculator();
     document.dispatchEvent(new Event("neighborcraft:reset"));
     readFormState();
     renderSummary();
-    try {
-      localStorage.removeItem(storageKey);
-    } catch (error) {
-      console.error("Не вдалося очистити стан NeighborCraft із localStorage.", error);
-    }
   };
 
   readStoredState();

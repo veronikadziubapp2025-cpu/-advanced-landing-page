@@ -6,6 +6,7 @@ const REGEX_PHONE = /^\+380 \d{2} \d{3} \d{2} \d{2}$/;
 
 // Чекаємо, поки весь HTML-документ повністю завантажиться в браузері, і тільки тоді запускаємо скрипт.
 document.addEventListener("DOMContentLoaded", () => {
+  const { formatDate, formatPhone, formatPrice } = window.NeighborCraftUtils;
   // Знаходимо в HTML головну форму за її id.
   const form = document.getElementById("feedback-form");
   // Знаходимо контейнер (темний оверлей) модального вікна.
@@ -26,6 +27,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const submitButton = form?.querySelector('button[type="submit"]');
   // Створюємо колекцію Set (унікальний список) для збереження полів, з якими користувач уже взаємодіяв.
   const touchedFields = new Set();
+  const errorElementCache = new Map();
+  const statusIconCache = new Map();
   // Змінна для збереження запропонованого правильного номера телефону (спочатку порожня).
   let suggestedPhoneValue = null;
   // Змінна, щоб запам'ятати, де був фокус до відкриття модалки (щоб повернути його туди після закриття).
@@ -79,6 +82,28 @@ document.addEventListener("DOMContentLoaded", () => {
     messageInput,
     agreementInput,
   ];
+  for (const inputElement of formFields) {
+    const errorElement = document.getElementById(`${inputElement.id}Error`);
+    if (!(errorElement instanceof HTMLParagraphElement)) {
+      throw new Error(
+        `Повідомлення про помилку для поля "${inputElement.id}" не знайдено.`,
+      );
+    }
+    errorElementCache.set(inputElement.id, errorElement);
+
+    const wrapper = inputElement.closest(".relative");
+    const icons = Array.from(wrapper?.querySelectorAll("svg") ?? []);
+    const errorIcon = icons.find((icon) =>
+      icon.classList.contains("peer-aria-[invalid=true]:block"),
+    );
+    const successIcon = icons.find((icon) =>
+      icon.classList.contains("peer-data-[valid=true]:block"),
+    );
+    if (!errorIcon || !successIcon) {
+      throw new Error(`Не знайдено іконки станів поля "${inputElement.id}".`);
+    }
+    statusIconCache.set(inputElement.id, { errorIcon, successIcon });
+  }
   // Знаходимо основні блоки сторінки (хедер, мейн, футер), які треба буде заблокувати під час відкриття модалки.
   const backgroundElements = [
     document.querySelector("header"),
@@ -101,8 +126,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Допоміжна функція: знаходить абзац <p> з текстом помилки для конкретного поля (наприклад, nameError).
   function getErrorElement(id) {
-    const element = document.getElementById(`${id}Error`);
-    if (!(element instanceof HTMLParagraphElement)) {
+    const element = errorElementCache.get(id);
+    if (!element) {
       throw new Error(`Повідомлення про помилку для поля "${id}" не знайдено.`);
     }
     return element;
@@ -110,24 +135,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Допоміжна функція: знаходить SVG-іконки (хрестик і галочку) всередині обгортки поля.
   function getStatusIcons(inputElement) {
-    // Шукаємо найближчий батьківський блок із класом .relative.
-    const wrapper = inputElement.closest(".relative");
-    // Збираємо всі SVG-іконки всередині цієї обгортки в масив.
-    const icons = Array.from(wrapper?.querySelectorAll("svg") ?? []);
-    // Знаходимо іконку помилки за специфічним Tailwind-класом.
-    const errorIcon = icons.find((icon) =>
-      icon.classList.contains("peer-aria-[invalid=true]:block"),
-    );
-    // Знаходимо іконку успіху за специфічним Tailwind-класом.
-    const successIcon = icons.find((icon) =>
-      icon.classList.contains("peer-data-[valid=true]:block"),
-    );
-    // Якщо якоїсь іконки немає в HTML — повідомляємо про помилку.
-    if (!errorIcon || !successIcon) {
+    const icons = statusIconCache.get(inputElement.id);
+    if (!icons) {
       throw new Error(`Не знайдено іконки станів поля "${inputElement.id}".`);
     }
-    // Повертаємо обидві знайдені іконки об'єктом.
-    return { errorIcon, successIcon };
+    return icons;
   }
 
   // Функція вмикає стан ПОМИЛКИ для поля:
@@ -230,22 +242,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     // Якщо введено щось незрозуміле або занадто коротке — нічого не пропонуємо.
     return null;
-  }
-
-  function formatPhone(value) {
-    let digits = value.replace(/\D/g, "");
-    if (digits.startsWith("380")) digits = digits.slice(3);
-    else if (digits.startsWith("38") && digits.length > 2) {
-      digits = digits.slice(2);
-    } else if (digits.startsWith("0")) digits = digits.slice(1);
-
-    digits = digits.slice(0, 9);
-    let formatted = "+380 ";
-    if (digits.length > 0) formatted += digits.slice(0, 2);
-    if (digits.length > 2) formatted += ` ${digits.slice(2, 5)}`;
-    if (digits.length > 5) formatted += ` ${digits.slice(5, 7)}`;
-    if (digits.length > 7) formatted += ` ${digits.slice(7, 9)}`;
-    return formatted;
   }
 
   // Валідація поля ІМ'Я:
@@ -376,6 +372,8 @@ document.addEventListener("DOMContentLoaded", () => {
     return validateAgreement();
   }
 
+  window.validateFeedbackMessage = validateMessage;
+
   // Імітація відправки форми на сервер (оскільки бекенд не підключений):
   function simulateSubmit(mode) {
     // Якщо вже йде відправка — нічого не робимо (захист від повторних кліків).
@@ -396,14 +394,7 @@ document.addEventListener("DOMContentLoaded", () => {
       let confirmationText = "Дякуємо! Ваше повідомлення успішно надіслано.";
       if (mode === "booking") {
         const requestNumber = `NC-${Math.floor(1000 + Math.random() * 9000)}`;
-        const formatDate = (value) =>
-          new Intl.DateTimeFormat("uk-UA", { timeZone: "UTC" }).format(
-            new Date(`${value}T00:00:00Z`),
-          );
-        const amount = new Intl.NumberFormat("uk-UA", {
-          maximumFractionDigits: 0,
-        }).format(state.totalPrice);
-        confirmationText = `Дякуємо, ${state.name}! Заявку #${requestNumber} створено. Дати оренди: ${formatDate(state.dateFrom)}–${formatDate(state.dateTo)}. До сплати: ${amount} ₴ + 1 000 ₴ застави.`;
+        confirmationText = `Дякуємо, ${state.name}! Заявку #${requestNumber} створено. Дати оренди: ${formatDate(state.dateFrom)}–${formatDate(state.dateTo)}. До сплати: ${formatPrice(state.totalPrice)} + 1 000 ₴ застави.`;
       }
 
       window.openSuccessModal({
@@ -644,7 +635,7 @@ document.addEventListener("DOMContentLoaded", () => {
             rentDaysInput.value.trim() === ""
               ? "Вкажіть кількість діб від 1 до 30."
               : "Вкажіть ціле число діб від 1 до 30.";
-          rentDaysInput.dispatchEvent(new Event("input", { bubbles: true }));
+          window.updateRentalCalculator();
           rentDaysInput.focus();
         }
         return;

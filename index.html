@@ -7,9 +7,21 @@
       name="description"
       content="Орендуй перфоратор Bosch GBH 2-26 у сусіда поруч з домом. Забронюй онлайн за хвилину, оплата та застава під захистом Escrow."
     />
+    <link
+      rel="canonical"
+      href="https://advanced-landing-page-vcraft2.vercel.app/"
+    />
     <meta name="theme-color" content="#121212" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="uk_UA" />
+    <meta
+      property="og:url"
+      content="https://advanced-landing-page-vcraft2.vercel.app/"
+    />
+    <meta
+      property="og:image"
+      content="https://advanced-landing-page-vcraft2.vercel.app/assets/bosch-gbh-2-26.jpg"
+    />
     <meta
       property="og:title"
       content="NeighborCraft — перфоратор Bosch поруч"
@@ -20,18 +32,26 @@
     />
     <title>NeighborCraft — оренда перфоратора Bosch поруч</title>
     <link rel="icon" type="image/jpeg" href="assets/images/logo.jpg" />
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="assets/css/output.css" />
+    <link
+      rel="preload"
+      as="image"
+      href="assets/bosch-gbh-2-26.jpg"
+      fetchpriority="high"
+    />
 
     <!--  CDN(Стилі Swiper та Fancybox) -->
     <link
-      rel="stylesheet"
+      rel="preload"
+      as="style"
       href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+      onload="this.onload=null;this.rel='stylesheet'"
     />
     <link
-      rel="stylesheet"
+      rel="preload"
+      as="style"
       href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css"
+      onload="this.onload=null;this.rel='stylesheet'"
     />
   </head>
   <body
@@ -126,10 +146,10 @@
               class="flex min-h-[44px] items-center rounded-lg px-3 hover:bg-[#F4F3EE] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2"
               >Як це працює</a
             >
-            <agit
+            <a
               href="#escrow"
               class="flex min-h-[44px] items-center rounded-lg px-3 hover:bg-[#F4F3EE] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2"
-              >Безпека</agit
+              >Безпека</a
             >
             <a
               href="#reviews"
@@ -164,7 +184,8 @@
             class="max-w-2xl text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl lg:text-5xl"
           >
             Перфоратор Bosch GBH 2-26 —<br />
-            <span id="typed-text" class="text-[#176B3A]"></span>
+            <span class="sr-only">оренда у сусіда поруч із домом з гарантією Escrow.</span>
+            <span id="typed-text" class="text-[#176B3A]" aria-hidden="true"></span>
           </h1>
 
           <p class="mt-4 max-w-xl text-base leading-relaxed text-[#595959]">
@@ -180,8 +201,8 @@
               alt="Перфоратор Bosch GBH 2-26 у чорному кейсі"
               width="600"
               height="320"
+              fetchpriority="high"
               class="h-full w-full object-contain p-4"
-              decoding="async"
             />
           </div>
 
@@ -242,7 +263,7 @@
                   name="Дата отримання"
                   aria-describedby="dateFromError"
                   aria-invalid="false"
-                  class="min-h-[44px] w-full rounded-xl border border-[#E5E7EB] bg-white px-3 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2 aria-[invalid=true]:border-[#B91C1C] data-[valid=true]:border-[#1D382B]"
+                  class="min-h-[44px] w-full rounded-xl border border-[#949494] bg-white px-3 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2 aria-[invalid=true]:border-[#B91C1C] data-[valid=true]:border-[#1D382B]"
                   required
                 />
                 <p
@@ -261,7 +282,7 @@
                   name="Дата повернення"
                   aria-describedby="dateToError"
                   aria-invalid="false"
-                  class="min-h-[44px] w-full rounded-xl border border-[#E5E7EB] bg-white px-3 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2 aria-[invalid=true]:border-[#B91C1C] data-[valid=true]:border-[#1D382B]"
+                  class="min-h-[44px] w-full rounded-xl border border-[#949494] bg-white px-3 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2 aria-[invalid=true]:border-[#B91C1C] data-[valid=true]:border-[#1D382B]"
                   required
                 />
                 <p
@@ -277,7 +298,7 @@
               <select
                 id="booking-kit-type"
                 name="Комплектація"
-                class="min-h-[44px] w-full rounded-xl border border-[#E5E7EB] bg-white px-3 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2"
+                class="min-h-[44px] w-full rounded-xl border border-[#949494] bg-white px-3 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2"
               >
                 <option value="basic">Тільки перфоратор</option>
                 <option value="drills">+ набір свердел (+50 ₴/доба)</option>
@@ -346,7 +367,7 @@
                   inputmode="numeric"
                   aria-describedby="error-days"
                   aria-invalid="false"
-                  class="min-h-[48px] w-full rounded-xl border border-[#949494] bg-white px-4 py-3 text-base hover:border-[#595959] focus-visible:border-[#121212] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2"
+                  class="min-h-[48px] w-full rounded-xl border border-[#949494] bg-white px-4 py-3 text-base placeholder:text-[#595959] hover:border-[#595959] focus-visible:border-[#121212] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2"
                 />
                 <p
                   id="error-days"
@@ -529,7 +550,7 @@
         class="py-12 sm:py-16 bg-white border-y border-[#E5E7EB]"
       >
         <div class="max-w-7xl mx-auto px-4">
-          <p class="text-xs font-bold uppercase tracking-wider text-[#00C853]">
+          <p class="text-xs font-bold uppercase tracking-wider text-[#176B3A]">
             Детальний огляд
           </p>
           <h2
@@ -542,12 +563,19 @@
             <!-- Фото 1 — У кейсі (L-Case) -->
             <a
               href="https://gipsokarton.in.ua/media/products/perforator-bosch-gbh-2-26-dre-professional-v-keisi_e986b4f1.png"
+              rel="noopener noreferrer"
               data-fancybox="neighbor-gallery"
               data-caption="Перфоратор Bosch GBH 2-26 Professional у фірмовому пластиковому кейсі L-Case"
+              aria-label="Збільшити фото: Перфоратор Bosch GBH 2-26 у кейсі"
+              class="block rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2"
             >
               <img
                 src="https://gipsokarton.in.ua/media/products/perforator-bosch-gbh-2-26-dre-professional-v-keisi_e986b4f1.png"
                 alt="Bosch GBH 2-26 Professional в кейсі"
+                width="400"
+                height="256"
+                loading="lazy"
+                decoding="async"
                 class="rounded-2xl border border-[#E5E7EB] bg-[#F4F3EE]/30 p-4 shadow-sm hover:scale-[1.03] transition duration-300 w-full h-64 object-contain cursor-zoom-in"
               />
             </a>
@@ -555,12 +583,19 @@
             <!-- Фото 2 — Перфоратор зблизька -->
             <a
               href="https://www.bosch-professional.com/pk/en/ocsmedia/5955-54/application-image/full/rotary-hammer-with-sds-plus-pro-gbh-2-26-dre-0611253703.png"
+              rel="noopener noreferrer"
               data-fancybox="neighbor-gallery"
               data-caption="Bosch GBH 2-26 Professional — ергономічна рукоятка, патрон SDS-plus та обмежувач глибини"
+              aria-label="Збільшити фото: Перфоратор Bosch GBH 2-26 зблизька"
+              class="block rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2"
             >
               <img
                 src="https://www.bosch-professional.com/pk/en/ocsmedia/5955-54/application-image/full/rotary-hammer-with-sds-plus-pro-gbh-2-26-dre-0611253703.png"
                 alt="Перфоратор Bosch GBH 2-26"
+                width="400"
+                height="256"
+                loading="lazy"
+                decoding="async"
                 class="rounded-2xl border border-[#E5E7EB] bg-[#F4F3EE]/30 p-4 shadow-sm hover:scale-[1.03] transition duration-300 w-full h-64 object-contain cursor-zoom-in"
               />
             </a>
@@ -568,12 +603,19 @@
             <!-- Фото 3 — Свердління (Буріння стіни) -->
             <a
               href="https://images.unsplash.com/photo-1504148455328-c376907d081c?w=1200"
+              rel="noopener noreferrer"
               data-fancybox="neighbor-gallery"
               data-caption="Свердління з ударом (буріння) бетону та цегли буром SDS-plus"
+              aria-label="Збільшити фото: Буріння стіни перфоратором"
+              class="block rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2"
             >
               <img
-                src="https://images.unsplash.com/photo-1504148455328-c376907d081c?w=600"
+                src="https://images.unsplash.com/photo-1504148455328-c376907d081c?w=600&amp;fm=webp&amp;q=80"
                 alt="Буріння стіни перфоратором"
+                width="400"
+                height="256"
+                loading="lazy"
+                decoding="async"
                 class="rounded-2xl border border-[#E5E7EB] shadow-sm hover:scale-[1.03] transition duration-300 w-full h-64 object-cover cursor-zoom-in"
               />
             </a>
@@ -581,12 +623,19 @@
             <!-- Фото 4 — Демонтаж (Робота з долотом) -->
             <a
               href="https://hireload.co.uk/wp-content/uploads/2025/07/sds-plus-hammer-drill-hire-london-rotary-hammer-for-concrete-and-masonry-block-wall-800x800.webp"
+              rel="noopener noreferrer"
               data-fancybox="neighbor-gallery"
               data-caption="Ударний режим без обертання (довбання) для демонтажу штукатурки чи плитки"
+              aria-label="Збільшити фото: Демонтажні роботи перфоратором"
+              class="block rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2"
             >
               <img
                 src="https://hireload.co.uk/wp-content/uploads/2025/07/sds-plus-hammer-drill-hire-london-rotary-hammer-for-concrete-and-masonry-block-wall-800x800.webp"
                 alt="Демонтажні роботи перфоратором"
+                width="400"
+                height="256"
+                loading="lazy"
+                decoding="async"
                 class="rounded-2xl border border-[#E5E7EB] shadow-sm hover:scale-[1.03] transition duration-300 w-full h-64 object-cover cursor-zoom-in"
               />
             </a>
@@ -621,22 +670,30 @@
           <div
             class="relative mt-8 aspect-video w-full overflow-hidden rounded-2xl border border-gray-200 bg-neutral-900 shadow-xl"
           >
-            <iframe
-              src="https://www.youtube-nocookie.com/embed/Xr1AwIcasWs?rel=0"
-              title="Відео про NeighborCraft"
-              class="h-full w-full border-0"
-              loading="lazy"
-              allow="
-                accelerometer;
-                autoplay;
-                clipboard-write;
-                encrypted-media;
-                picture-in-picture;
-                web-share;
-              "
-              allowfullscreen
-              referrerpolicy="strict-origin-when-cross-origin"
-            ></iframe>
+            <button
+              type="button"
+              data-load-youtube
+              aria-label="Відтворити відео про NeighborCraft"
+              class="group relative h-full w-full overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-inset"
+            >
+              <img
+                src="https://i.ytimg.com/vi/Xr1AwIcasWs/hqdefault.jpg"
+                alt=""
+                loading="lazy"
+                decoding="async"
+                class="absolute inset-0 h-full w-full object-cover"
+              />
+              <span
+                aria-hidden="true"
+                class="absolute inset-0 flex items-center justify-center bg-[#121212]/30 transition-colors group-hover:bg-[#121212]/45"
+              >
+                <span class="flex size-16 items-center justify-center rounded-full bg-[#00E676] text-[#121212] shadow-lg">
+                  <svg viewBox="0 0 24 24" class="ml-1 size-7 fill-current">
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                </span>
+              </span>
+            </button>
           </div>
         </div>
       </section>
@@ -735,8 +792,12 @@
               </div>
               <div class="mt-6 flex items-center gap-3">
                 <img
-                  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150"
-                  alt="Олена С."
+                  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=88&amp;h=88&amp;fit=crop&amp;fm=webp&amp;q=80"
+                  alt="Олена С. — відгук про оренду перфоратора Bosch GBH 2-26"
+                  width="44"
+                  height="44"
+                  loading="lazy"
+                  decoding="async"
                   class="h-11 w-11 rounded-full border-2 border-[#00E676] object-cover"
                 />
                 <p class="text-sm font-bold">
@@ -761,8 +822,12 @@
               </div>
               <div class="mt-6 flex items-center gap-3">
                 <img
-                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150"
-                  alt="Андрій К."
+                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=88&amp;h=88&amp;fit=crop&amp;fm=webp&amp;q=80"
+                  alt="Андрій К. — відгук про лазерний нівелір DeWalt"
+                  width="44"
+                  height="44"
+                  loading="lazy"
+                  decoding="async"
                   class="h-11 w-11 rounded-full border-2 border-[#00E676] object-cover"
                 />
                 <p class="text-sm font-bold">
@@ -787,8 +852,12 @@
               </div>
               <div class="mt-6 flex items-center gap-3">
                 <img
-                  src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150"
-                  alt="Тарас М."
+                  src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=88&amp;h=88&amp;fit=crop&amp;fm=webp&amp;q=80"
+                  alt="Тарас М. — відгук про оренду мийки Kärcher K5"
+                  width="44"
+                  height="44"
+                  loading="lazy"
+                  decoding="async"
                   class="h-11 w-11 rounded-full border-2 border-[#00E676] object-cover"
                 />
                 <p class="text-sm font-bold">
@@ -813,8 +882,12 @@
               </div>
               <div class="mt-6 flex items-center gap-3">
                 <img
-                  src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150"
-                  alt="Ірина В."
+                  src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=88&amp;h=88&amp;fit=crop&amp;fm=webp&amp;q=80"
+                  alt="Ірина В. — відгук про ексцентрикову шліфмашину"
+                  width="44"
+                  height="44"
+                  loading="lazy"
+                  decoding="async"
                   class="h-11 w-11 rounded-full border-2 border-[#00E676] object-cover"
                 />
                 <p class="text-sm font-bold">
@@ -839,8 +912,12 @@
               </div>
               <div class="mt-6 flex items-center gap-3">
                 <img
-                  src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150"
-                  alt="Максим Д."
+                  src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=88&amp;h=88&amp;fit=crop&amp;fm=webp&amp;q=80"
+                  alt="Максим Д. — відгук про ланцюгову пилку Bosch"
+                  width="44"
+                  height="44"
+                  loading="lazy"
+                  decoding="async"
                   class="h-11 w-11 rounded-full border-2 border-[#00E676] object-cover"
                 />
                 <p class="text-sm font-bold">
@@ -884,7 +961,7 @@
               >
                 Пункти передачі інструментів
               </h2>
-              <p class="mt-3 text-sm text-neutral-600 sm:text-base">
+              <p class="mt-3 text-sm text-[#595959] sm:text-base">
                 Зустрічайтеся з сусідами у перевірених хабах видачі або
                 замовляйте адресну передачу у своєму районі.
               </p>
@@ -907,7 +984,7 @@
                 </div>
                 <div class="flex items-center gap-2">
                   <span class="text-lg" aria-hidden="true">🕒</span>
-                  <span class="text-neutral-600">Щодня з 08:00 до 21:00</span>
+                  <span class="text-[#595959]">Щодня з 08:00 до 21:00</span>
                 </div>
               </address>
             </div>
@@ -915,14 +992,22 @@
             <div
               class="relative h-[300px] w-full min-w-0 overflow-hidden rounded-2xl border border-gray-200 bg-[#DCECDD] shadow-md sm:h-[360px] lg:h-[420px]"
             >
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2573.080927906954!2d24.012117576882656!3d49.83533863172159!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x473add7b5879a78d%3A0x8e6e58798dc71f8b!2z0LLRg9C7LiDQodGC0LXQv9Cw0L3QsCDQkdCw0L3QtNC10YDQuCwgMTIsINCb0YzQstGW0LIsINCb0YzQstGW0LLRgdGM0LrQsCDQvtCx0LvQsNGB0YLRjCwgNzkwMTM!5e0!3m2!1suk!2sua!4v1700000000000!5m2!1suk!2sua"
-                title="Пункти передачі інструментів NeighborCraft у Львові"
-                class="h-full w-full border-0"
-                loading="lazy"
-                allowfullscreen
-                referrerpolicy="no-referrer-when-downgrade"
-              ></iframe>
+              <div class="flex h-full flex-col items-center justify-center gap-4 p-6 text-center">
+                <p class="text-lg font-bold text-[#121212]">
+                  м. Львів, вул. Степана Бандери, 12
+                </p>
+                <p class="max-w-md text-sm text-[#595959]">
+                  Інтерактивна мапа завантажується лише після вашого запиту.
+                </p>
+                <button
+                  type="button"
+                  data-load-map
+                  data-map-src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2573.080927906954!2d24.012117576882656!3d49.83533863172159!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x473add7b5879a78d%3A0x8e6e58798dc71f8b!2z0LLRg9C7LiDQodGC0LXQv9Cw0L3QsCDQkdCw0L3QtNC10YDQuCwgMTIsINCb0YzQstGW0LIsINCb0YzQstGW0LLRgdGM0LrQsCDQvtCx0LvQsNGB0YLRjCwgNzkwMTM!5e0!3m2!1suk!2sua!4v1700000000000!5m2!1suk!2sua"
+                  class="inline-flex min-h-[48px] items-center justify-center rounded-xl bg-[#00E676] px-5 font-bold text-[#121212] hover:bg-[#33EB91] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2"
+                >
+                  Показати інтерактивну мапу
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -932,12 +1017,12 @@
           aria-labelledby="feedback-title"
         >
           <div class="mx-auto w-full max-w-2xl">
-            <h3
+            <h2
               id="feedback-title"
               class="text-2xl font-bold text-[#121212] sm:text-3xl"
             >
               Зворотний зв'язок
-            </h3>
+            </h2>
             <p class="mb-4 mt-2 text-sm text-[#595959] sm:mb-6">
               Поля, позначені зірочкою (*), обов'язкові.
             </p>
@@ -966,7 +1051,6 @@
                   type="button"
                   role="tab"
                   aria-selected="false"
-                  aria-controls="feedback-form"
                   tabindex="-1"
                   class="min-h-[48px] rounded-lg px-3 text-sm font-bold text-[#595959] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212]"
                 >Задати питання</button>
@@ -975,6 +1059,7 @@
               <div
                 id="booking-summary"
                 role="tabpanel"
+                aria-labelledby="booking-mode-tab"
                 aria-live="polite"
                 class="md:col-span-2 rounded-xl border border-[#D9FBE8] bg-[#F4FBF7] p-4"
               >
@@ -1015,7 +1100,7 @@
                     autocomplete="name"
                     aria-describedby="nameError"
                     aria-invalid="false"
-                    class="peer min-h-[48px] w-full rounded-xl border border-[#949494] bg-white px-4 py-3 pr-10 text-base text-[#121212] transition-colors duration-200 hover:border-[#595959] focus-visible:border-[#121212] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2 aria-[invalid=true]:border-[#B91C1C] data-[valid=true]:border-[#1D382B]"
+                    class="peer min-h-[48px] w-full rounded-xl border border-[#949494] bg-white px-4 py-3 pr-10 text-base text-[#121212] placeholder:text-[#595959] transition-colors duration-200 hover:border-[#595959] focus-visible:border-[#121212] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2 aria-[invalid=true]:border-[#B91C1C] data-[valid=true]:border-[#1D382B]"
                     required
                   />
                   <svg
@@ -1063,7 +1148,7 @@
                     autocomplete="email"
                     aria-describedby="emailError"
                     aria-invalid="false"
-                    class="peer min-h-[48px] w-full rounded-xl border border-[#949494] bg-white px-4 py-3 pr-10 text-base text-[#121212] transition-colors duration-200 hover:border-[#595959] focus-visible:border-[#121212] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2 aria-[invalid=true]:border-[#B91C1C] data-[valid=true]:border-[#1D382B]"
+                    class="peer min-h-[48px] w-full rounded-xl border border-[#949494] bg-white px-4 py-3 pr-10 text-base text-[#121212] placeholder:text-[#595959] transition-colors duration-200 hover:border-[#595959] focus-visible:border-[#121212] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2 aria-[invalid=true]:border-[#B91C1C] data-[valid=true]:border-[#1D382B]"
                     required
                   />
                   <svg
@@ -1115,7 +1200,7 @@
                     placeholder="+380 XX XXX XX XX"
                     aria-describedby="phoneError phoneHint"
                     aria-invalid="false"
-                    class="peer min-h-[48px] w-full rounded-xl border border-[#949494] bg-white px-4 py-3 pr-10 text-base text-[#121212] transition-colors duration-200 hover:border-[#595959] focus-visible:border-[#121212] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2 aria-[invalid=true]:border-[#B91C1C] data-[valid=true]:border-[#1D382B]"
+                    class="peer min-h-[48px] w-full rounded-xl border border-[#949494] bg-white px-4 py-3 pr-10 text-base text-[#121212] placeholder:text-[#595959] transition-colors duration-200 hover:border-[#595959] focus-visible:border-[#121212] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121212] focus-visible:ring-offset-2 aria-[invalid=true]:border-[#B91C1C] data-[valid=true]:border-[#1D382B]"
                     required
                   />
                   <svg
@@ -1410,59 +1495,16 @@
         </button>
       </div>
     </div>
+    <script src="assets/js/utils.js" defer></script>
     <script src="assets/js/validation.js" defer></script>
     <script src="assets/js/booking-validation.js" defer></script>
     <script src="js/widget.js" defer></script>
     <script src="assets/js/neighborcraft-state.js" defer></script>
 
     <!--Скрипти з CDN, JS-бібліотек  -->
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
-
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const swiper = new Swiper(".reviews-swiper", {
-          loop: true,
-          spaceBetween: 24,
-          grabCursor: true,
-          autoplay: {
-            delay: 3000,
-            disableOnInteraction: false,
-            pauseOnMouseEnter: true,
-          },
-          pagination: {
-            el: ".swiper-pagination",
-            clickable: true,
-          },
-          navigation: {
-            nextEl: ".swiper-button-next",
-            prevEl: ".swiper-button-prev",
-          },
-          breakpoints: {
-            320: { slidesPerView: 1 },
-            768: { slidesPerView: 2 },
-            1024: { slidesPerView: 3 },
-          },
-        });
-
-        Fancybox.bind("[data-fancybox='neighbor-gallery']", {
-          Carousel: { Transition: "fade" },
-          Images: { Panzoom: { maxScale: 3 } },
-        });
-
-        const typed = new Typed("#typed-text", {
-          strings: [
-            "перфоратор Bosch за 5 хв пішки.",
-            "лазерний нівелір з гарантією Escrow.",
-            "мийку Kärcher на вихідні.",
-          ],
-          typeSpeed: 95,
-          backSpeed: 55,
-          backDelay: 2200,
-          loop: true,
-        });
-      });
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js" defer crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12" defer crossorigin="anonymous"></script>
+    <script src="assets/js/ui-init.js" defer></script>
   </body>
 </html>

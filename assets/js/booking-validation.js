@@ -22,19 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
     throw new Error("Не знайдено повідомлення про помилку дати бронювання.");
   }
 
-  function getTodayValue() {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, "0");
-    const day = String(today.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  }
-
-  function addDays(dateValue, days) {
-    const date = new Date(`${dateValue}T00:00:00Z`);
-    date.setUTCDate(date.getUTCDate() + days);
-    return date.toISOString().slice(0, 10);
-  }
+  const { getTodayValue, addDays } = window.NeighborCraftUtils;
 
   function setFieldState(input, error, message) {
     input.setAttribute("aria-invalid", message ? "true" : "false");
